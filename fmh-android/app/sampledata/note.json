@@ -1,0 +1,20 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "patientId": 1,
+      "patientName": "Иванов Иван Иванович",
+      "description": "м.",
+      "creatorId": 2,
+      "creatorName": "Петров Петр Петрович",
+      "executorId": 3,
+      "executorName": "Тестов Тест Тестович",
+      "createDate": "18.02.2023 18:00",
+      "planeExecuteDate": "18.02.2023 15:00",
+      "factExecuteDate": "",
+      "comment": "18.02.2023 17:17 Занято",
+      "status": "Активная",
+      "deleted": false
+    }
+  ]
+}
