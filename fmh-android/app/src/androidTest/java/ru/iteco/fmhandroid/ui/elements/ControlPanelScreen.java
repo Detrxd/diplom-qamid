@@ -6,9 +6,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static ru.iteco.fmhandroid.ui.AppActivityTest.newNewsTitle;
-import static ru.iteco.fmhandroid.ui.AppActivityTest.newsDescriptionString;
-import static ru.iteco.fmhandroid.ui.AppActivityTest.newsTitleString;
+import static ru.iteco.fmhandroid.ui.tests.MainPageTest.newNewsTitle;
+import static ru.iteco.fmhandroid.ui.tests.MainPageTest.newsDescriptionString;
+import static ru.iteco.fmhandroid.ui.tests.MainPageTest.newsTitleString;
 import static ru.iteco.fmhandroid.ui.utils.Utils.withIndex;
 
 import androidx.test.espresso.ViewInteraction;

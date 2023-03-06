@@ -42,6 +42,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import ru.iteco.fmhandroid.R;
+import ru.iteco.fmhandroid.ui.enums.Status;
 
 public class Utils {
     public static Matcher<View> withIndex(final Matcher<View> matcher, final int index) {
@@ -170,7 +171,7 @@ public class Utils {
         return view.getParent();
     }
 
-    public static void checkClaimStatus(String status) {
+    public static void checkClaimStatus(Status status) {
         ViewInteraction firstClaim = onView(
                 allOf(withIndex(withId(R.id.executor_name_material_text_view), 0)));
         SystemClock.sleep(1000);
@@ -179,7 +180,7 @@ public class Utils {
                 allOf(withId(R.id.status_label_text_view),
                         withParent(withParent(IsInstanceOf.<View>instanceOf(androidx.cardview.widget.CardView.class)))));
         SystemClock.sleep(1000);
-        claimStatus.check(matches(allOf(isDisplayed(), withText(status))));
+        claimStatus.check(matches(allOf(isDisplayed(), withText(status.getCode()))));
         ViewInteraction backButton = onView(withId(R.id.close_image_button)).perform(nestedScrollTo());
         backButton.perform(click());
     }

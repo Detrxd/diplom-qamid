@@ -30,6 +30,9 @@ public class AuthorizationSteps {
         AuthorizationScreen.password.perform(replaceText(text));
     }
 
+//    public void testWaiting(){
+//        AuthorizationScreen.testWait.check(matches(isDisplayed()));
+//    }
     public void signIn() {
         Allure.step("Нажатие кнопки входа");
         AuthorizationScreen.buttonSignIn.check(matches(isClickable()));
