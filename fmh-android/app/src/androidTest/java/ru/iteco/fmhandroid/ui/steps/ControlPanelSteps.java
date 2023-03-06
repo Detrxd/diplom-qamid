@@ -104,9 +104,8 @@ public class ControlPanelSteps {
 
     @Step("Нажать на заголовок")
     public void clickNewsTitle() {
-        ControlPanelScreen.newsTitle.perform(click());
+        ControlPanelScreen. newsTitle.perform(click());
     }
-
     @Step("Проверить описание новости")
     public void checkNewsDescription(boolean visible) {
         if (visible) {

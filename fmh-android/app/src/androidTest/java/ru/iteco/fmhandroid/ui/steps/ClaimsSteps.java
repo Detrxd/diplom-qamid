@@ -7,8 +7,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 
-import android.os.SystemClock;
-
 import io.qameta.allure.kotlin.Allure;
 import ru.iteco.fmhandroid.ui.elements.ClaimScreen;
 import ru.iteco.fmhandroid.ui.elements.MainScreen;
@@ -99,6 +97,5 @@ public class ClaimsSteps {
     public void createClaim() {
         Allure.step("Кликнуть создать претензию");
         ClaimScreen.addNewClaimButton.perform(click());
-        SystemClock.sleep(1500);
     }
 }

@@ -1,9 +1,9 @@
 package ru.iteco.fmhandroid.ui.tests;
 
+import static ru.iteco.fmhandroid.ui.tests.NewsPageTests.newsDescriptionString;
+import static ru.iteco.fmhandroid.ui.tests.NewsPageTests.newsTitleString;
 import static ru.iteco.fmhandroid.ui.utils.Utils.getCurrentDate;
 import static ru.iteco.fmhandroid.ui.utils.Utils.getCurrentTime;
-
-import android.os.SystemClock;
 
 import androidx.test.espresso.NoMatchingViewException;
 
@@ -18,7 +18,7 @@ import ru.iteco.fmhandroid.ui.steps.CreateNewsSteps;
 import ru.iteco.fmhandroid.ui.steps.NewsFilterSteps;
 import ru.iteco.fmhandroid.ui.steps.NewsSteps;
 
-public class NewsFilterTests extends BasicTest {
+public class NewsFilterTests extends GeneralHelper {
 
     NewsFilterSteps NewsFilterSteps = new NewsFilterSteps();
     AuthorizationSteps AuthorizationSteps = new AuthorizationSteps();
@@ -27,37 +27,30 @@ public class NewsFilterTests extends BasicTest {
     ControlPanelSteps ControlPanelSteps = new ControlPanelSteps();
     CreateNewsSteps CreateNewsSteps = new CreateNewsSteps();
 
-    public static String newsTitleString = "Тест тест " + getCurrentDate() + "T" + getCurrentTime();
-    public static String newsDescriptionString = "Тестовое описание " + getCurrentDate() + "T" + getCurrentTime();
-    public static String newNewsTitle = "Тестовый заголовок " + getCurrentDate() + "T" + getCurrentTime();
-
     String newsPublicationDate = getCurrentDate();
     String newsTime = getCurrentTime();
 
-
-
     @Before
-    public void loginCheck() {
-        SystemClock.sleep(7000);
+    public void loginCheck() throws InterruptedException {
+        Thread.sleep(7000);
         try {
             AuthorizationSteps.isAuthorizationScreen();
         } catch (NoMatchingViewException e) {
             return;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
         AuthorizationSteps.enterLogin("login2");
         AuthorizationSteps.enterPassword("password2");
         AuthorizationSteps.signIn();
-        SystemClock.sleep(2000);
     }
 
-    @Test
+    @Test //Тесты не проходят, ошибка на экране Новости
     @DisplayName("Сортировка новостей")
-    public void newsScreenFiltering() {
+    public void newsScreenFiltering() throws InterruptedException {
 
-        SystemClock.sleep(2500);
         CommonSteps.goToScreen("News");
         NewsSteps.isNewsScreen();
-        SystemClock.sleep(3500);
         CommonSteps.clickOK();
 
         NewsSteps.goToControlPanel();
@@ -66,6 +59,7 @@ public class NewsFilterTests extends BasicTest {
         ControlPanelSteps.createNews();
         CreateNewsSteps.isCreateNewsScreen();
         CreateNewsSteps.selectNewsCategory();
+
         CreateNewsSteps.enterNewsTitle(newsTitleString);
         CreateNewsSteps.enterNewsPublicationDate(newsPublicationDate);
         CreateNewsSteps.enterNewsTime(newsTime);
@@ -79,7 +73,6 @@ public class NewsFilterTests extends BasicTest {
         NewsSteps.isNewsScreen();
 
         NewsSteps.openFilter();
-        SystemClock.sleep(3500);
 
         NewsFilterSteps.enterPublishDateStart(newsPublicationDate);
         NewsFilterSteps.enterPublishDateEnd(newsPublicationDate);

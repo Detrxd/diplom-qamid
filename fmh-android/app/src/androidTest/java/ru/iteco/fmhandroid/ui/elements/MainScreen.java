@@ -22,6 +22,7 @@ public class MainScreen {
     public ViewInteraction categoryIcon = onView(withIndex(withId(R.id.category_icon_image_view), 0));
     public ViewInteraction newsDescriptionAfterCollapse = onView(withIndex(withId(R.id.view_news_item_image_view), 0));
     public ViewInteraction firstClaimExecutorName = onView(allOf(withIndex(withId(R.id.executor_name_material_text_view), 0)));
+
     public ViewInteraction news = onView((withText("News")));
 
 }

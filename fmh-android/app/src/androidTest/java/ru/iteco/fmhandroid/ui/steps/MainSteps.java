@@ -7,8 +7,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static org.hamcrest.CoreMatchers.not;
 
-import android.os.SystemClock;
-
 import androidx.test.espresso.matcher.ViewMatchers;
 
 import io.qameta.allure.kotlin.Step;
@@ -82,12 +80,12 @@ public class MainSteps {
     @Step("Открыть претензию")
     public void openSingleClaim() {
         MainScreen.firstClaimExecutorName.perform(click());
-        SystemClock.sleep(2000);
+
     }
 
     @Step("Создать претензию")
     public void createClaim() {
         MainScreen.addNewClaimButton.perform(click());
-        SystemClock.sleep(1000);
+
     }
 }

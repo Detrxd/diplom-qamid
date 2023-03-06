@@ -53,4 +53,5 @@ public class NewsSteps {
     public void checkFirstNewsDate(String text) {
         NewsScreen.firstNewsDate.check(matches(withText(text)));
     }
+
 }

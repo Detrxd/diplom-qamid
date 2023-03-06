@@ -2,8 +2,6 @@ package ru.iteco.fmhandroid.ui.steps;
 
 import static androidx.test.espresso.action.ViewActions.click;
 
-import android.os.SystemClock;
-
 import io.qameta.allure.kotlin.Step;
 import ru.iteco.fmhandroid.ui.elements.CommonElements;
 
@@ -20,7 +18,6 @@ public class CommonSteps {
     @Step("Кликнуть сохранить")
     public void clickSave() {
         CommonElements.buttonSave.perform(click());
-        SystemClock.sleep(1500);
     }
 
     @Step("Кликнуть ОК")

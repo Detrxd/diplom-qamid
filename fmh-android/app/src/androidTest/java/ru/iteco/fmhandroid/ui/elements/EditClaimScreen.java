@@ -16,7 +16,7 @@ import org.hamcrest.core.IsInstanceOf;
 import ru.iteco.fmhandroid.R;
 
 public class EditClaimScreen {
-    public ViewInteraction claimStatus = onView(allOf(withId(R.id.status_label_text_view), withText("Open"), withParent(withParent(IsInstanceOf.<View>instanceOf(androidx.cardview.widget.CardView.class)))));
+    public ViewInteraction claimStatus = onView(allOf(withId(R.id.status_label_text_view), withText("In progress"), withParent(withParent(IsInstanceOf.<View>instanceOf(androidx.cardview.widget.CardView.class)))));
     public ViewInteraction backButton = onView(withId(R.id.close_image_button));
     public ViewInteraction buttonAddComment = onView(allOf(withId(R.id.add_comment_image_button), withContentDescription("button add comment"), withParent(withParent(withId(R.id.comments_material_card_view)))));
 

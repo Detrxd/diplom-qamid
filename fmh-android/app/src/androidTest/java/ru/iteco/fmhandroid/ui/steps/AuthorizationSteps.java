@@ -13,7 +13,7 @@ import ru.iteco.fmhandroid.ui.elements.AuthorizationScreen;
 public class AuthorizationSteps {
     AuthorizationScreen AuthorizationScreen = new AuthorizationScreen();
 
-    public void isAuthorizationScreen() {
+    public void isAuthorizationScreen() throws InterruptedException {
         Allure.step("Проверка, что это экран авторизации");
         AuthorizationScreen.authorization.check(matches(isDisplayed()));
     }
@@ -30,9 +30,6 @@ public class AuthorizationSteps {
         AuthorizationScreen.password.perform(replaceText(text));
     }
 
-//    public void testWaiting(){
-//        AuthorizationScreen.testWait.check(matches(isDisplayed()));
-//    }
     public void signIn() {
         Allure.step("Нажатие кнопки входа");
         AuthorizationScreen.buttonSignIn.check(matches(isClickable()));

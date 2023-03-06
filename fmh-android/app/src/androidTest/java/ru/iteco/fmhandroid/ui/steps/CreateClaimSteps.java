@@ -7,8 +7,6 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import android.os.SystemClock;
-
 import io.qameta.allure.kotlin.Step;
 import ru.iteco.fmhandroid.ui.elements.CreateClaimScreen;
 
@@ -42,7 +40,6 @@ public class CreateClaimSteps {
     @Step("Выбрать исполнителя")
     public void selectExecutor() {
         CreateClaimScreen.executorList.perform(click());
-        SystemClock.sleep(2000);
         CreateClaimScreen.claimTitle.perform(click());
     }
 
@@ -56,14 +53,14 @@ public class CreateClaimSteps {
     public void enterClaimTime(String text) {
         CreateClaimScreen.claimTime.check(matches(isDisplayed()));
         CreateClaimScreen.claimTime.perform(replaceText(text), closeSoftKeyboard());
-        SystemClock.sleep(2000);
+
     }
 
     @Step("Ввести описание")
     public void enterClaimDescription(String text) {
-        SystemClock.sleep(2000);
+
         CreateClaimScreen.claimDescription.check(matches(isDisplayed()));
-        CreateClaimScreen.claimDescription.perform(replaceText(text),closeSoftKeyboard());
+        CreateClaimScreen.claimDescription.perform(replaceText(text), closeSoftKeyboard());
     }
 
 }

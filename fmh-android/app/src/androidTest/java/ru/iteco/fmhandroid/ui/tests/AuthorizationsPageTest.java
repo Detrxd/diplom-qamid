@@ -7,7 +7,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
-import android.os.SystemClock;
+import static ru.iteco.fmhandroid.ui.utils.Utils.waitId;
 
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewInteraction;
@@ -21,30 +21,31 @@ import ru.iteco.fmhandroid.ui.steps.AuthorizationSteps;
 import ru.iteco.fmhandroid.ui.steps.CommonSteps;
 import ru.iteco.fmhandroid.ui.steps.MainSteps;
 
-public class AuthorizationsPageTest extends BasicTest {
+public class AuthorizationsPageTest extends GeneralHelper {
 
     AuthorizationSteps AuthorizationSteps = new AuthorizationSteps();
     CommonSteps CommonSteps = new CommonSteps();
     MainSteps MainSteps = new MainSteps();
 
     @Before
-    public void logoutCheck() {
-        SystemClock.sleep(7000);
+    public void logoutCheck() throws InterruptedException {
+        Thread.sleep(7000);
         try {
             AuthorizationSteps.isAuthorizationScreen();
         } catch (NoMatchingViewException e) {
             CommonSteps.logout();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Test
     @DisplayName("Проверка входа с пустой формой и под несуществующим пользователем")
-    public void signInWrong() {
+    public void signInWrong() throws InterruptedException {
         AuthorizationSteps.isAuthorizationScreen();
         AuthorizationSteps.signIn();
         ViewInteraction emptyToast = onView(withText(R.string.empty_login_or_password)).inRoot(withDecorView(not(is(mActivityTestRule.getActivity().getWindow().getDecorView()))));
 
-        SystemClock.sleep(1500);
         AuthorizationSteps.enterLogin(" ");
         AuthorizationSteps.enterPassword(" ");
         AuthorizationSteps.signIn();
@@ -55,18 +56,14 @@ public class AuthorizationsPageTest extends BasicTest {
 
     @Test
     @DisplayName("Успешный вход за пользователя и выход из приложения")
-    public void signInOK() {
+    public void signInOK() throws InterruptedException {
 
         AuthorizationSteps.isAuthorizationScreen();
         AuthorizationSteps.enterLogin("login2");
         AuthorizationSteps.enterPassword("password2");
         AuthorizationSteps.signIn();
-        SystemClock.sleep(2500);
+        waitId(R.id.all_news_text_view,2500);
         MainSteps.isMainScreen();
-
-        CommonSteps.logout();
-
-        AuthorizationSteps.isAuthorizationScreen();
     }
 
 }

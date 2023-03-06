@@ -8,6 +8,7 @@ import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtP
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
@@ -29,6 +30,7 @@ import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.espresso.util.HumanReadables;
+import androidx.test.espresso.util.TreeIterables;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -40,11 +42,51 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeoutException;
 
 import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.enums.Status;
 
 public class Utils {
+    public static ViewAction waitId(final int viewId, final long millis) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return isRoot();
+            }
+
+            @Override
+            public String getDescription() {
+                return "wait for a specific view with id <" + viewId + "> during " + millis + " millis.";
+            }
+
+            @Override
+            public void perform(final UiController uiController, final View view) {
+                uiController.loopMainThreadUntilIdle();
+                final long startTime = System.currentTimeMillis();
+                final long endTime = startTime + millis;
+                final Matcher<View> viewMatcher = withId(viewId);
+
+                do {
+                    for (View child : TreeIterables.breadthFirstViewTraversal(view)) {
+
+                        if (viewMatcher.matches(child)) {
+                            return;
+                        }
+                    }
+
+                    uiController.loopMainThreadForAtLeast(50);
+                }
+                while (System.currentTimeMillis() < endTime);
+
+                throw new PerformException.Builder()
+                        .withActionDescription(this.getDescription())
+                        .withViewDescription(HumanReadables.describe(view))
+                        .withCause(new TimeoutException())
+                        .build();
+            }
+        };
+    }
     public static Matcher<View> withIndex(final Matcher<View> matcher, final int index) {
         return new TypeSafeMatcher<View>() {
             int currentIndex = 0;
@@ -174,12 +216,10 @@ public class Utils {
     public static void checkClaimStatus(Status status) {
         ViewInteraction firstClaim = onView(
                 allOf(withIndex(withId(R.id.executor_name_material_text_view), 0)));
-        SystemClock.sleep(1000);
         firstClaim.perform(click());
         ViewInteraction claimStatus = onView(
                 allOf(withId(R.id.status_label_text_view),
                         withParent(withParent(IsInstanceOf.<View>instanceOf(androidx.cardview.widget.CardView.class)))));
-        SystemClock.sleep(1000);
         claimStatus.check(matches(allOf(isDisplayed(), withText(status.getCode()))));
         ViewInteraction backButton = onView(withId(R.id.close_image_button)).perform(nestedScrollTo());
         backButton.perform(click());
