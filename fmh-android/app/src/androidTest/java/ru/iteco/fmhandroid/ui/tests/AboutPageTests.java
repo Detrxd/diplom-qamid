@@ -1,14 +1,11 @@
 package ru.iteco.fmhandroid.ui.tests;
 
-import static ru.iteco.fmhandroid.ui.utils.Utils.waitId;
-
 import androidx.test.espresso.NoMatchingViewException;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import io.qameta.allure.kotlin.junit4.DisplayName;
-import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.steps.AboutSteps;
 import ru.iteco.fmhandroid.ui.steps.AuthorizationSteps;
 import ru.iteco.fmhandroid.ui.steps.CommonSteps;
@@ -22,28 +19,26 @@ public class AboutPageTests extends GeneralHelper {
     MainSteps MainSteps = new MainSteps();
 
     @Before
-    public void loginCheck() throws InterruptedException {
-        Thread.sleep(7000);
+    public void loginCheck() {
         try {
             AuthorizationSteps.isAuthorizationScreen();
         } catch (NoMatchingViewException e) {
             return;
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
-        AuthorizationSteps.enterLogin("login2");
-        AuthorizationSteps.enterPassword("password2");
+        AuthorizationSteps.enterLogin(userLogin);
+        AuthorizationSteps.enterPassword(userPassword);
         AuthorizationSteps.signIn();
+
     }
 
     @Test
     @DisplayName("Открытие экрана о приложение и возврат на главный экран")
+
     public void aboutScreenAndBackToMain() {
+        MainSteps.waitForLoadingMain();
         CommonSteps.goToScreen("About");
-        waitId(R.id.about_version_title_text_view,2500);
         AboutSteps.checkEverythingYouWant();
         AboutSteps.goBack();
-        waitId(R.id.all_claims_text_view,1500);
         MainSteps.isMainScreen();
     }
 }

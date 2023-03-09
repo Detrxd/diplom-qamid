@@ -10,8 +10,11 @@ import io.qameta.allure.android.runners.AllureAndroidJUnit4;
 import ru.iteco.fmhandroid.ui.AppActivity;
 
 @RunWith(AllureAndroidJUnit4.class)
-public abstract class GeneralHelper {
+public class GeneralHelper {
     @Rule
     public ActivityTestRule<AppActivity> mActivityTestRule = new ActivityTestRule<>(AppActivity.class);
+
+    static final String userLogin = "login2";
+    static final String userPassword = "password2";
 
 }

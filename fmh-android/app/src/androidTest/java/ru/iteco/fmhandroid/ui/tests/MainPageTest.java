@@ -2,7 +2,6 @@ package ru.iteco.fmhandroid.ui.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static ru.iteco.fmhandroid.ui.utils.Utils.waitId;
 
 import androidx.test.espresso.NoMatchingViewException;
 
@@ -10,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import io.qameta.allure.kotlin.junit4.DisplayName;
-import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.steps.AuthorizationSteps;
 import ru.iteco.fmhandroid.ui.steps.CommonSteps;
 import ru.iteco.fmhandroid.ui.steps.ControlPanelSteps;
@@ -25,23 +23,23 @@ public class MainPageTest extends GeneralHelper {
     ControlPanelSteps ControlPanelSteps = new ControlPanelSteps();
 
     @Before
-    public void loginCheck() throws InterruptedException {
-        Thread.sleep(7000);
+    public void loginCheck() {
+
         try {
             AuthorizationSteps.isAuthorizationScreen();
         } catch (NoMatchingViewException e) {
             return;
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
-        AuthorizationSteps.enterLogin("login2");
-        AuthorizationSteps.enterPassword("password2");
+        AuthorizationSteps.enterLogin(userLogin);
+        AuthorizationSteps.enterPassword(userPassword);
         AuthorizationSteps.signIn();
+
     }
 
     @Test
     @DisplayName("Разворачивание и сворачивание блока новостей и претензий")
     public void expandAll() {
+        MainSteps.waitForLoadingMain();
         MainSteps.expandAllNews();
         MainSteps.allNewsNotDisplayed();
         MainSteps.expandAllClaims();
@@ -58,7 +56,7 @@ public class MainPageTest extends GeneralHelper {
     public void controlPanelSorting() {
 
         CommonSteps.goToScreen("News");
-        waitId(R.id.news_item_title_text_view,7500);
+
         NewsSteps.isNewsScreen();
 
         NewsSteps.goToControlPanel();

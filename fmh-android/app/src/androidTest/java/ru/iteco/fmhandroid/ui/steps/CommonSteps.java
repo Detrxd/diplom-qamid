@@ -1,8 +1,13 @@
 package ru.iteco.fmhandroid.ui.steps;
 
+import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
+
+import static ru.iteco.fmhandroid.ui.utils.Utils.waitId;
 
 import io.qameta.allure.kotlin.Step;
+import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.elements.CommonElements;
 
 public class CommonSteps {
@@ -13,6 +18,10 @@ public class CommonSteps {
     public void logout() {
         CommonElements.manImage.perform(click());
         CommonElements.exitButton.perform(click());
+    }
+
+    public void waitLogoutField(){
+        onView(isRoot()).perform(waitId(R.id.authorization_image_button,7000));
     }
 
     @Step("Кликнуть сохранить")
@@ -30,6 +39,9 @@ public class CommonSteps {
         CommonElements.buttonCancel.perform(click());
     }
 
+    public void waitForAuthButton() {
+        onView(isRoot()).perform(waitId(R.id.authorization_image_button,7000));
+    }
     @Step("Кликнуть отмена для подтверждения")
     public void clickCancelText() {
         CommonElements.buttonCancelText.perform(click());

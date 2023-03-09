@@ -1,7 +1,6 @@
 package ru.iteco.fmhandroid.ui.tests;
 
 import static ru.iteco.fmhandroid.ui.utils.Utils.checkClaimStatus;
-import static ru.iteco.fmhandroid.ui.utils.Utils.waitId;
 
 import androidx.test.espresso.NoMatchingViewException;
 
@@ -9,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import io.qameta.allure.kotlin.junit4.DisplayName;
-import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.enums.Status;
 import ru.iteco.fmhandroid.ui.steps.AuthorizationSteps;
 import ru.iteco.fmhandroid.ui.steps.ClaimsSteps;
@@ -21,23 +19,23 @@ public class ClaimFilterTests extends GeneralHelper {
     ClaimsSteps ClaimsSteps = new ClaimsSteps();
 
     @Before
-    public void loginCheck() throws InterruptedException {
-        Thread.sleep(7000);
+    public void loginCheck() {
+
         try {
             AuthorizationSteps.isAuthorizationScreen();
         } catch (NoMatchingViewException e) {
             return;
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
-        AuthorizationSteps.enterLogin("login2");
-        AuthorizationSteps.enterPassword("password2");
+        AuthorizationSteps.enterLogin(userLogin);
+        AuthorizationSteps.enterPassword(userPassword);
         AuthorizationSteps.signIn();
+
     }
 
     @Test
     @DisplayName("Фильтрация претензий")
-    public void filteringClaims() throws InterruptedException {
+    public void filteringClaims() {
+        MainSteps.waitForLoadingMain();
         MainSteps.openAllClaims();
 
         ClaimsSteps.openFiltering();
@@ -47,7 +45,7 @@ public class ClaimFilterTests extends GeneralHelper {
         ClaimsSteps.checkCheckboxInProgress(true);
         ClaimsSteps.clickCheckboxInProgress();
         ClaimsSteps.clickOK();
-        waitId(R.id.claim_list_recycler_view,3500);
+
         checkClaimStatus(Status.OPEN);
 
         ClaimsSteps.isClaimsScreen();
@@ -59,7 +57,7 @@ public class ClaimFilterTests extends GeneralHelper {
         ClaimsSteps.checkCheckboxInProgress(true);
         ClaimsSteps.clickOK();
 
-        waitId(R.id.claim_list_recycler_view,3500);
+
         checkClaimStatus(Status.IN_PROGRESS);
 
         ClaimsSteps.isClaimsScreen();
@@ -71,7 +69,7 @@ public class ClaimFilterTests extends GeneralHelper {
         ClaimsSteps.checkCheckboxInProgress(false);
         ClaimsSteps.clickOK();
 
-        waitId(R.id.claim_list_recycler_view,3500);
+
         checkClaimStatus(Status.EXECUTED);
 
         ClaimsSteps.isClaimsScreen();
@@ -83,7 +81,7 @@ public class ClaimFilterTests extends GeneralHelper {
         ClaimsSteps.checkCheckboxExecuted(false);
         ClaimsSteps.clickOK();
 
-        waitId(R.id.claim_list_recycler_view,3500);
+
         checkClaimStatus(Status.CANCELED);
 
         ClaimsSteps.isClaimsScreen();

@@ -35,17 +35,15 @@ public class NewsPageTests extends GeneralHelper {
     public static String newsDescriptionString = "Тестовое описание " + getCurrentDate() + "T" + getCurrentTime();
 
     @Before
-    public void loginCheck() throws InterruptedException {
-        Thread.sleep(7000);
+    public void loginCheck() {
+
         try {
             AuthorizationSteps.isAuthorizationScreen();
         } catch (NoMatchingViewException e) {
             return;
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
-        AuthorizationSteps.enterLogin("login2");
-        AuthorizationSteps.enterPassword("password2");
+        AuthorizationSteps.enterLogin(userLogin);
+        AuthorizationSteps.enterPassword(userPassword);
         AuthorizationSteps.signIn();
     }
 

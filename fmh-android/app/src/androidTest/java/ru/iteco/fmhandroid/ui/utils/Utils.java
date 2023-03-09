@@ -2,9 +2,7 @@ package ru.iteco.fmhandroid.ui.utils;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -15,7 +13,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
-import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -23,7 +20,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.core.widget.NestedScrollView;
-import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.PerformException;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
@@ -48,6 +44,47 @@ import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.enums.Status;
 
 public class Utils {
+
+    public static ViewAction waitDisplayed(final int viewId, final long millis) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return isRoot();
+            }
+
+            @Override
+            public String getDescription() {
+                return "wait for a specific view with id <" + viewId + "> has been displayed during " + millis + " millis.";
+            }
+
+            @Override
+            public void perform(final UiController uiController, final View view) {
+                uiController.loopMainThreadUntilIdle();
+                final long startTime = System.currentTimeMillis();
+                final long endTime = startTime + millis;
+                final Matcher<View> matchId = withId(viewId);
+                final Matcher<View> matchDisplayed = isDisplayed();
+
+                do {
+                    for (View child : TreeIterables.breadthFirstViewTraversal(view)) {
+                        if (matchId.matches(child) && matchDisplayed.matches(child)) {
+                            return;
+                        }
+                    }
+
+                    uiController.loopMainThreadForAtLeast(50);
+                }
+                while (System.currentTimeMillis() < endTime);
+
+                // timeout happens
+                throw new PerformException.Builder()
+                        .withActionDescription(this.getDescription())
+                        .withViewDescription(HumanReadables.describe(view))
+                        .withCause(new TimeoutException())
+                        .build();
+            }
+        };
+    }
     public static ViewAction waitId(final int viewId, final long millis) {
         return new ViewAction() {
             @Override
@@ -217,102 +254,15 @@ public class Utils {
         ViewInteraction firstClaim = onView(
                 allOf(withIndex(withId(R.id.executor_name_material_text_view), 0)));
         firstClaim.perform(click());
+
         ViewInteraction claimStatus = onView(
                 allOf(withId(R.id.status_label_text_view),
                         withParent(withParent(IsInstanceOf.<View>instanceOf(androidx.cardview.widget.CardView.class)))));
+        onView(isRoot()).perform(waitId(R.id.status_icon_image_view,7000));
         claimStatus.check(matches(allOf(isDisplayed(), withText(status.getCode()))));
         ViewInteraction backButton = onView(withId(R.id.close_image_button)).perform(nestedScrollTo());
         backButton.perform(click());
-    }
 
-    public static boolean isDisplayedWithSwipe(ViewInteraction locator, int recycler, boolean finishSwipe) {
-        try {
-            locator.check(matches(isDisplayed()));
-            return true;
-        } catch (NoMatchingViewException ignored) {
-        }
-        boolean invis = true;
-        int n = 1;
-        while (invis) {
-            try {
-                if (recycler == 1) {
-                    onView(allOf(withId(R.id.news_list_recycler_view), isDisplayed())).perform(actionOnItemAtPosition(n, swipeUp()));
-                } else {
-                    onView(allOf(withId(R.id.claim_list_recycler_view), isDisplayed())).perform(actionOnItemAtPosition(n, swipeUp()));
-                }
-            } catch (PerformException e) {
-                return false;
-            }
-            try {
-                locator.check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));//.check(matches(isDisplayed()));
-                invis = false;
-            } catch (NoMatchingViewException e) {
-                invis = true;
-            }
-            n++;
-            if (!invis & finishSwipe) {
-                try {
-                    if (recycler == 1) {
-                        onView(allOf(withId(R.id.news_list_recycler_view), isDisplayed())).perform(actionOnItemAtPosition(n, swipeUp()));
-                    } else {
-                        onView(allOf(withId(R.id.claim_list_recycler_view), isDisplayed())).perform(actionOnItemAtPosition(n, swipeUp()));
-                    }
-                } catch (PerformException e) {
-                    return false;
-                }
-            }
-            if (n > 400) {
-                return false;
-            }
-            SystemClock.sleep(2000);
-        }
-        ;
-        return true;
-    }
-
-    public static boolean fastDown(ViewInteraction locator, int recycler, boolean finishSwipe) {
-        try {
-            locator.check(matches(isDisplayed()));
-            return true;
-        } catch (NoMatchingViewException ignored) {
-        }
-        boolean invis = true;
-        int n = 1;
-        while (invis) {
-            try {
-                if (recycler == 1) {
-                    onView(allOf(withId(R.id.news_list_recycler_view), isDisplayed())).perform(actionOnItemAtPosition(n, swipeUp()));
-                } else {
-                    onView(allOf(withId(R.id.claim_list_recycler_view), isDisplayed())).perform(actionOnItemAtPosition(n, swipeUp()));
-                }
-            } catch (PerformException e) {
-                return false;
-            }
-            try {
-                locator.check(matches(isDisplayed()));
-                invis = false;
-            } catch (NoMatchingViewException e) {
-                invis = true;
-            }
-            n++;
-            if (!invis & finishSwipe) {
-                try {
-                    if (recycler == 1) {
-                        onView(allOf(withId(R.id.news_list_recycler_view), isDisplayed())).perform(actionOnItemAtPosition(n, swipeUp()));
-                    } else {
-                        onView(allOf(withId(R.id.claim_list_recycler_view), isDisplayed())).perform(actionOnItemAtPosition(n, swipeUp()));
-                    }
-                } catch (PerformException e) {
-                    return false;
-                }
-            }
-            if (n > 400) {
-                return false;
-            }
-            SystemClock.sleep(2000);
-        }
-        ;
-        return true;
     }
 
     public static String getCurrentDate() {

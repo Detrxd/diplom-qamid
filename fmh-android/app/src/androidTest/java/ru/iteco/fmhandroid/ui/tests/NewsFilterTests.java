@@ -31,23 +31,22 @@ public class NewsFilterTests extends GeneralHelper {
     String newsTime = getCurrentTime();
 
     @Before
-    public void loginCheck() throws InterruptedException {
-        Thread.sleep(7000);
+    public void loginCheck() {
+
         try {
             AuthorizationSteps.isAuthorizationScreen();
         } catch (NoMatchingViewException e) {
             return;
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
-        AuthorizationSteps.enterLogin("login2");
-        AuthorizationSteps.enterPassword("password2");
+        AuthorizationSteps.enterLogin(userLogin);
+        AuthorizationSteps.enterPassword(userPassword);
         AuthorizationSteps.signIn();
+
     }
 
     @Test //Тесты не проходят, ошибка на экране Новости
     @DisplayName("Сортировка новостей")
-    public void newsScreenFiltering() throws InterruptedException {
+    public void newsScreenFiltering() {
 
         CommonSteps.goToScreen("News");
         NewsSteps.isNewsScreen();

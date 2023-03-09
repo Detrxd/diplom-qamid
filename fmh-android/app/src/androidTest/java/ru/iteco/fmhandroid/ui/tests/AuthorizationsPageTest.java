@@ -7,7 +7,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
-import static ru.iteco.fmhandroid.ui.utils.Utils.waitId;
+import android.os.SystemClock;
 
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewInteraction;
@@ -28,22 +28,21 @@ public class AuthorizationsPageTest extends GeneralHelper {
     MainSteps MainSteps = new MainSteps();
 
     @Before
-    public void logoutCheck() throws InterruptedException {
-        Thread.sleep(7000);
+    public void logoutCheck() {
+        SystemClock.sleep(5000);
         try {
             AuthorizationSteps.isAuthorizationScreen();
         } catch (NoMatchingViewException e) {
             CommonSteps.logout();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
     }
 
     @Test
     @DisplayName("Проверка входа с пустой формой и под несуществующим пользователем")
-    public void signInWrong() throws InterruptedException {
+    public void signInWrong() {
         AuthorizationSteps.isAuthorizationScreen();
         AuthorizationSteps.signIn();
+
         ViewInteraction emptyToast = onView(withText(R.string.empty_login_or_password)).inRoot(withDecorView(not(is(mActivityTestRule.getActivity().getWindow().getDecorView()))));
 
         AuthorizationSteps.enterLogin(" ");
@@ -56,14 +55,17 @@ public class AuthorizationsPageTest extends GeneralHelper {
 
     @Test
     @DisplayName("Успешный вход за пользователя и выход из приложения")
-    public void signInOK() throws InterruptedException {
+    public void signInOK() {
 
         AuthorizationSteps.isAuthorizationScreen();
-        AuthorizationSteps.enterLogin("login2");
-        AuthorizationSteps.enterPassword("password2");
+        AuthorizationSteps.enterLogin(userLogin);
+        AuthorizationSteps.enterPassword(userPassword);
         AuthorizationSteps.signIn();
-        waitId(R.id.all_news_text_view,2500);
+
+        MainSteps.waitForLoadingMain();
         MainSteps.isMainScreen();
+
+        CommonSteps.logout();
     }
 
 }

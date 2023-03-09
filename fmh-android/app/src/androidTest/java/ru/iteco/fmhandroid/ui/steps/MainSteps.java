@@ -1,15 +1,20 @@
 package ru.iteco.fmhandroid.ui.steps;
 
+import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static org.hamcrest.CoreMatchers.not;
+
+import static ru.iteco.fmhandroid.ui.utils.Utils.waitId;
 
 import androidx.test.espresso.matcher.ViewMatchers;
 
 import io.qameta.allure.kotlin.Step;
+import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.elements.MainScreen;
 
 public class MainSteps {
@@ -18,7 +23,7 @@ public class MainSteps {
     @Step("Проверка, что это главный экран")
     public void isMainScreen() {
         MainScreen.allNews.check(matches(isDisplayed()));
-        MainScreen.allClaims.check(matches(isDisplayed()));
+        MainScreen.expandClaims.check(matches(isDisplayed()));
     }
 
     @Step("Развернуть блок новостей")
@@ -88,4 +93,8 @@ public class MainSteps {
         MainScreen.addNewClaimButton.perform(click());
 
     }
+    public static void waitForLoadingMain() {
+        onView(isRoot()).perform(waitId(R.id.all_news_text_view,7000));
+    }
+
 }

@@ -4,8 +4,10 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ru.iteco.fmhandroid.ui.utils.Utils.waitId;
 
 import io.qameta.allure.kotlin.Step;
+import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.elements.NewsScreen;
 import ru.iteco.fmhandroid.ui.utils.Utils;
 
@@ -14,6 +16,7 @@ public class NewsSteps {
 
     @Step("Проверить, что это экран новостей")
     public void isNewsScreen() {
+        waitId(R.id.news_item_title_text_view,7500);
         NewsScreen.news.check(matches(isDisplayed()));
         NewsScreen.buttonSort.check(matches(isDisplayed()));
     }
